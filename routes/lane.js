@@ -1,6 +1,7 @@
 const express = require('express');
 const laneRouter = new express.Router();
 const Lane = require("../models")
+const mongoose = require('mongoose');
 
 laneRouter.param('laneId', (req, res, next, id) => {
 	Lane.findById(id, (err, doc) => {
@@ -18,9 +19,9 @@ laneRouter.param('laneId', (req, res, next, id) => {
 //GET /lanes
 // Return all lanes
 laneRouter.get('/lanes', (req, res, next) => {
-	Lane.find({},null, {sort: {createdAt: 'descending'}}, (err, lanes) => {
+	Lane.find({},null, (err, lanes) => {
 		if(err) return next(err);
-		res.json(lanes);
+		res.json({lanes});
 	});
 });
 
@@ -34,7 +35,6 @@ laneRouter.post('/lanes', (req, res, next) => {
 		res.json(lane);
 	});
 });
-
 
 //DELETE /lanes/:laneId
 //Delete a lane by laneId
@@ -52,6 +52,7 @@ laneRouter.delete('/lanes/:laneId', (req, res, next) => {
 laneRouter.put('/lanes/:laneId', (req, res, next) => {
 	req.lane.update(req.body, (err, result) => {
 		if(err) return next(err);
+		console.log(result)
 		res.json(result);
 	});
 });
